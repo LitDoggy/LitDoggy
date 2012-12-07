@@ -1,0 +1,178 @@
++//
++//  Header.h
++//  NetWork
++//
++//  Created by vancke on 12-12-5.
++//  Copyright (c) 2012年 vancke. All rights reserved.
++//
++
++#ifndef NetWork_Header_h
++#define NetWork_Header_h
++#include<iostream>
++#include<string>
++#include<time.h>
++#include <stdlib.h>
++
++using namespace std;
++/*user:状态改变的用户名 status:改变后的状态 msg:要发送的消息*/
++void set_update_userlist_msg(char* user,char status,char* msg);
++/*user:消息发起人的用户名 msg:要发送的消息*/
++void set_cs_msg(char* user,char* msg);
++/*get the current date*/
++void get_current_date(char*);
++/*add the desired symbol to the message*/
++void add_symbol_to(char* , char );
++
++/*user:状态改变的用户名 status:改变后的状态 msg:要发送的消息*/
++void set_update_userlist_msg(char* user,char status,char* msg)
++{
++    char space = ' ';                  //the symbol needs to be added
++    char cr = '\r';
++    char lf = '\n';
++    
++    char* version = new char[6];
++    version = "CS1.0";
++    strcpy(msg, version);              //copy version to the msg
++    
++    add_symbol_to(msg, space);
++    
++    char* dema = new char[7];
++    dema = "UPDATE";
++    strcat(msg, dema);                 //add the state to the msg
++    
++    add_symbol_to(msg, space);
++    
++    add_symbol_to(msg, status);
++    
++    add_symbol_to(msg, space);
++    
++    strcat(msg, user);                 //add user name to the msg
++    
++    add_symbol_to(msg, cr);
++    
++    add_symbol_to(msg, lf);
++    
++    char* date = new char[5];
++    date = "Date";
++    strcat(msg, date);
++
++    add_symbol_to(msg, space);
++    
++    char* date_buf = new char[11];
++    get_current_date(date_buf);
++    strcat(msg, date_buf);             //add the time to the msg
++    
++    add_symbol_to(msg, cr);
++    
++    add_symbol_to(msg, lf);
++    
++    char* next_header = new char[15];  //add the second header to the msg
++    next_header = "Content-Length";
++    strcat(msg, next_header);
++    
++    add_symbol_to(msg, space);
++    
++    char* enti_length = new char[10];  //add the length of entity to the nail of the msg
++    enti_length = "0";                 //according to the current protocals,we default the value to 0
++    strcat(msg, enti_length);
++    
++    add_symbol_to(msg, cr);
++    
++    add_symbol_to(msg, lf);
++    
++    add_symbol_to(msg, cr);
++    
++    add_symbol_to(msg, lf);
++    
++    char* entity = new char[10];       //保留字段
++    entity = "Entity";
++    strcat(msg, entity);
++    
++}
++
++/*user:消息发起人的用户名 msg:要发送的消息*/
++void set_cs_msg(char* user,char* msg)
++{
++    char space = ' ';
++    char cr = '\r';
++    char lf = '\n';
++    
++    char* version = new char[6];
++    version = "CS1.0";
++    strcpy(msg, version);              //copy version to the msg
++    
++    add_symbol_to(msg, space);
++    
++    char* dema = new char[8];
++    dema = "MESSAGE";
++    strcat(msg, dema);                 //add the state to the msg
++    
++    add_symbol_to(msg, space);
++    
++    strcat(msg, user);                 //add user name to the msg
++    
++    add_symbol_to(msg, cr);
++    
++    add_symbol_to(msg, lf);
++    
++    char* date = new char[5];          //get the current date
++    date = "Date";
++    strcat(msg, date);
++    
++    add_symbol_to(msg, space);
++    
++    char* date_buf = new char[11];
++    get_current_date(date_buf);
++    strcat(msg, date_buf);             //add the time to the msg
++    
++    add_symbol_to(msg, cr);
++    
++    add_symbol_to(msg, lf);
++    
++    char* next_header = new char[15];  //add the second header to the msg
++    next_header = "Content-Length";
++    strcat(msg, next_header);
++    
++    add_symbol_to(msg, space);
++    
++    char* enti_length = new char[10];  //add the length of entity to the nail of the msg
++    enti_length = "0";                 //according to the current protocals,we default the value to 0
++    strcat(msg, enti_length);
++    
++    add_symbol_to(msg, cr);
++    
++    add_symbol_to(msg, lf);
++    
++    add_symbol_to(msg, cr);
++    
++    add_symbol_to(msg, lf);
++    
++    char* entity = new char[10];       //保留字段
++    entity = "Entity";
++    strcat(msg, entity);
++}
++
++/*get the current date*/
++void get_current_date(char* buf)
++{
++    time_t nowtime;
++    nowtime = time(NULL);
++    struct tm *local;
++    local=localtime(&nowtime);         //get the current date
++    strftime(buf,11,"%Y-%m-%d",local); //save in the format YYYY-XX-DD
++}
++
++/*add the desired symbol to the message*/
++void add_symbol_to(char* msg, char sym)
++{
++    char* header = msg;
++    while (*header) {                  //add the status to the msg
++        header++;
++    }
++    *header++ = sym;
++    *header = '\0';
++    
++    header = msg;
++}
++
++#endif
